@@ -8,11 +8,13 @@ if(any(dir() == "features.txt")){
   ## Otherwise, check to see if the working directory has the unzipped folder (local state)
   ## If not, download it!
   if(! any(dir() == data_dir)){
+    cat("Downloading original study data...")
     zip.name <- "UCI_HAR_Dataset.zip"
     download.file("http://d396qusza40orc.cloudfront.net/getdata/projectfiles/UCI%20HAR%20Dataset.zip", 
                   zip.name)
     unzip(zip.name)
     file.remove(zip.name)
+    cat("done.\n")
   }
 }
 
@@ -28,7 +30,7 @@ means_and_stds <- (function(data_dir){
     #Data comes from X_setname, space-delimited, has no header
     # and apply the column names  
     feature_file <- paste0(data_dir, "/", set_name, "/X_", set_name, ".txt")
-    cat(paste("Fetching [", set_name, "] data set. This may take a few moments..."))
+    cat(paste("Reading [", set_name, "] data file. This may take a few moments..."))
     feature_set <- tbl_df(read.csv(feature_file, sep="", header = FALSE, 
                                    col.names = feature_labels$V2))  #    This is the slow line.
     
@@ -65,12 +67,15 @@ means_and_stds <- (function(data_dir){
 
 
 #File for objectives 1-4
-write.csv(means_and_stds, "./means_and_stds.csv", row.names=FALSE)
+if(!file.exists("./target")){
+  dir.create('./target')
+}
+write.csv(means_and_stds, "./target/means_and_stds.csv", row.names=FALSE)
 
 #File for objective 5
 summaries <- means_and_stds %>%
   group_by(subject_id, activity_name) %>%
   summarise_each(funs(mean))
-#write.csv(summaries, "./summaries.csv", row.names=FALSE)
-write.table(summaries, "./summaries.txt", row.names=FALSE)
+#write.csv(summaries, "./target/summaries.csv", row.names=FALSE)
+write.table(summaries, "./target/summaries.txt", row.names=FALSE)
 
