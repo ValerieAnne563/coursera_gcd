@@ -3,6 +3,9 @@ run run_analysis.R, and it will produce
 1. stds_and_means.csv  
 This is the dataset for Objectives 1-4. See "Result Files" for a detailed description of its contents.
 
+2. summaries.txt
+This is the dataset for Objective 5. See "Result Files" for a detailed description of its contents.
+
 ## Scripts ##
 
 1. run_analysis.R   
@@ -22,6 +25,12 @@ This is a comma-separated file including 88 variable names and 10299 results
 - Second variable is the activity_name
 - Remaining 86 variables are the means and averages for all measurements [every feature originally labeled -mean() or -std()]
 
+2. produces summaries.csv
+
+- Captures all -mean() and -std() measurements from the original dataset
+- Where the experiment captured multiple observations of a subject at a given activity, this script provides the average.
+
+For example, the average _tBodyAcc_mean_X_ for subject 1 while walking. 
 
 ### Original data ###
 run_analysis.R will check to see if there is a file called "feature.txt" in the current working directory.  
