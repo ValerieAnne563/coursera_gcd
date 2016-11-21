@@ -1,33 +1,60 @@
+#About the data
 
+run_analysis.R summarizes raw data for the UCI Wearables Dataset:
+http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones
 
-#Variables
+And it produces a file called _summaries.txt_
+Bring it into R with `read.table("summaries.txt", row.name=FALSE)`
+
+## Variables  
+### subject_id
+The first variable indicates the id of the subject
+
+### activity_name 
+The second variable indicates the activity being measured, one of six
+
+ WALKING  
+ WALKING_UPSTAIRS  
+ WALKING_DOWNSTAIRS  
+ SITTING  
+ STANDING  
+ LAYING  
+
+### Summary data (79 variables)
+The original experiment captured multiple observations while a given subject performed an activity.   
+This dataset describes the mean and std deviation of each of those measurements.
+Where more than one observation exists for a given subject at that activity, the dataset provides an average of them.
+
+A detailed explanation of the data and the measurements are available in:
+http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones
 
 
 # Data Set construction
-All files appear to be space-delimited with no headers. Those arguments were necessary to read all files. 
 
 ## Combining the data ##
+All files appear to be space-delimited with no headers. Those arguments were necessary to read all files. 
 
-### Reading each feature set ###
-The training and test data sets came from , _test/X_test.txt_ and _train/X_train.txt_ .
+### Reading each feature data set ###
+The training and test data sets came from , _test/X_test.txt_ and _train/X_train.txt_ .  
+Also called the "measurement data sets"
 
 #### Labels ####
-Labels for these data sets came from _'UCI_HAR_Dataset/features.txt'_ contains the 561 labels for each feature. It had 561 values, which is consistent with the number of variables (columns) in the training and test data sets.
+Variable labels come from _'UCI_HAR_Dataset/features.txt'_ contains the 561 labels for each feature.  
+It had 561 values, which is consistent with the number of variables (columns) in the training and test data sets.  
+In the final data set, the labels have been updated to remove parentheses characters, and replace dashes with underscores.
 
 #### Add subject ID ####
-Each needed to include their respective subject ID data sets.  _test/subject_test.txt_ and _train/subject_train.txt_ . There were no row labels or other obvious join criteria. But, each had the same number of rows as their respective feature sets (2947 and 7352), which suggests that they were ordered the same way.
+Each measurement data set needed to include their respective subject ID data sets.  _test/subject_test.txt_ and _train/subject_train.txt_ .
+There was no apparent data relationship between the measurement data sets and the subject files, other than they had the same number of observations. So, result assumes that entries in the subject files map to the measurements 1:1, and are in the same order.
 
 #### Activity ####
-The README.md for the dataset called _test/subject_test.txt_ and _train/subject_train.txt_ the 'test labels'. The distinct values for these ranged from 1 to 5, which is consistent with the activity labels. These files became the 'activity' column in the feature data sets. Like the subject ID, these files had no row labels, but had the same number of observations (rows) as their respective data sets. So they are bound to the feature dataset in their original order from the file.
+The README.md for the dataset called _test/subject_test.txt_ and _train/subject_train.txt_ the 'test labels'.  
+The second columns of these files became the 'activity_name' column in the feature data sets. 
+Like the subject ID, they are bound to the feature dataset in their original order from the file.
 
 ### Bringing them together ###
-Label the origin of each feature set by adding 'train' and 'test' to a column called 'dataset'
+During an intermediate step, the script labels the origin of each feature set by adding 'train' and 'test' to a column called 'dataset'  
+This column is not present in the final data set.
 
 ## Selecting the desired variables ##
-Keep only activity ID and those features with 'mean' and 'std' in the label.
-Replace activity ID with human-readable activity labels
-
-
-# Assumptions #
-1. Y_test and Y_train files identified activities (assumed because the values were 1-6, and the README described that each record (directory) would have activity labels)
-2. Activity and subject files for each data set had no row names, but had the same number of observations (rows) as the feature data sets (X_test, X_train). So I assumed they were meant to be in the same order.
+Keep only the measurements with '-mean' and '-std' in the label.
